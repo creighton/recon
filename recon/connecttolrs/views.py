@@ -1,5 +1,17 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.conf import settings
+import requests
+import json
+import pprint
 
 def home(req):
-    return HttpResponse("hi.. this is connect to lrs")
+    # username: recon, password: recon
+    headers = {"Accept":"application/json"}
+    # r = requests.get("http://localhost:8000/XAPI/", headers=headers)
+    # make call to lrs
+    home_endpoint = "/XAPI/"
+    url = "%s%s" % (settings.LRS_ROOT_URL, home_endpoint)
+    r = requests.get(url, headers=headers, verify=False)
+    print settings.LRS_ROOT_URL
+    return HttpResponse(r.content, content_type="application/json")

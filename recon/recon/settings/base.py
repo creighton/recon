@@ -77,7 +77,7 @@ USE_L10N = True
 
 ########## MEDIA CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#media-root
-MEDIA_ROOT = normpath(join(DJANGO_ROOT, 'media'))
+MEDIA_ROOT = '/home/ubuntu/recon_project/recon/media/'
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#media-url
 MEDIA_URL = '/media/'
@@ -86,21 +86,21 @@ MEDIA_URL = '/media/'
 
 ########## STATIC FILE CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#static-root
-STATIC_ROOT = normpath(join(DJANGO_ROOT, 'static'))
+STATIC_ROOT = '/home/ubuntu/recon_project/recon/static/'
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#static-url
 STATIC_URL = '/static/'
 
 # See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
 STATICFILES_DIRS = (
-    normpath(join(DJANGO_ROOT, 'assets')),
+    '/home/ubuntu/recon_project/recon/assets',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#staticfiles-finders
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'compressor.finders.CompressorFinder',
+    # 'compressor.finders.CompressorFinder',
 )
 ########## END STATIC FILE CONFIGURATION
 
@@ -115,7 +115,7 @@ SECRET_KEY = r"u3sw@f%1$nkort=nh(_5wrbm@3o@9(qr$2r9-pv5ta9_mcmr=q"
 ########## FIXTURE CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-FIXTURE_DIRS
 FIXTURE_DIRS = (
-    normpath(join(DJANGO_ROOT, 'fixtures')),
+    '/home/ubuntu/recon_project/recon/fixtures',
 )
 ########## END FIXTURE CONFIGURATION
 
@@ -141,7 +141,7 @@ TEMPLATE_LOADERS = (
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#template-dirs
 TEMPLATE_DIRS = (
-    normpath(join(DJANGO_ROOT, 'templates')),
+    '/home/ubuntu/recon_project/recon/templates',
 )
 ########## END TEMPLATE CONFIGURATION
 

@@ -4,7 +4,10 @@
 from os.path import join, normpath
 
 from base import *
+import base64
 
+LRS_ROOT_URL = "http://localhost:8000"
+LRS_BASIC_CREDS = base64.b64encode("%s:%s" % ('recon', 'recon'))
 
 ########## DEBUG CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#debug
