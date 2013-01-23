@@ -1,0 +1,8 @@
+/*! project specific CSS goes here. */
+pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
+.string { color: green; }
+.number { color: blue; }
+.boolean { color: red; }
+.null { color: red; }
+.key { color: black; }
+.hover { background-color: #aaa; }

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Report Home{% endblock %}
+{% block page_title %}Report Home{% endblock %}
+{% block content %}
+{% if msg %}{{ msg }}{% endif %}
+
+{% if stmts %}<pre id="stmts"></pre>{% endif %}
+
+{% endblock %}
+{% block extra_js %}
+<script type="text/javascript">
+$(document).ready(function() {
+    {% autoescape off %}
+    $("pre#stmts").append(syntaxHighlight({{stmts}}));
+    {% endautoescape %}
+    $("span.expandable a").click(function(){
+        $(this).next("span.obj").toggle();
+        return false;
+    });
+});
+function syntaxHighlight(json) {
+    if (typeof json != 'string') {
+         json = JSON.stringify(json, undefined, 4);
+    }
+    json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    json = json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+        var cls = 'number';
+        if (/^"/.test(match)) {
+            if (/:$/.test(match)) {
+                cls = 'key';
+            } else {
+                cls = 'string';
+            }
+        } else if (/true|false/.test(match)) {
+            cls = 'boolean';
+        } else if (/null/.test(match)) {
+            cls = 'null';
+        }
+        return '<span class="' + cls + '">' + match + '</span>';
+    });
+    json = json.replace(/(\{|\[)/g, function(match){return '<span class="expandable"><a href="#">' + match +'</a><span class="obj">';});
+    return json.replace(/(\}|\])/g, function(match){return '</span>' + match + '</span>'});
+}
+</script>
+{% endblock %}
