@@ -4,6 +4,7 @@ from django.conf import settings
 import requests
 import json
 import pprint
+import connecttolrs
 
 def home(req):
     # username: recon, password: recon
@@ -15,3 +16,7 @@ def home(req):
     r = requests.get(url, headers=headers, verify=False)
     print settings.LRS_ROOT_URL
     return HttpResponse(r.content, content_type="application/json")
+
+def access_token_callback(req):
+    return connecttolrs.token_callback(req)
+    

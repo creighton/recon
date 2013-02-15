@@ -7,6 +7,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 # admin.autodiscover()
 
 urlpatterns = patterns('report.views',
+    (r'^ostmts/', 'oauth_stmts'),
     (r'^$', 'home'),
 
     # Uncomment the admin/doc line below to enable admin documentation:

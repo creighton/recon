@@ -6,7 +6,6 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
-    url(r'^$', include('report.urls')),
     url(r'^connecttolrs/', include('connecttolrs.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
@@ -14,4 +13,5 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^', include('report.urls')),
 )

@@ -5,6 +5,7 @@ from django.conf.urls import patterns, include, url
 # admin.autodiscover()
 
 urlpatterns = patterns('connecttolrs.views',
+    (r'^tokenok/', 'access_token_callback'),
     (r'^$', 'home'),
 
     # Uncomment the admin/doc line below to enable admin documentation:
