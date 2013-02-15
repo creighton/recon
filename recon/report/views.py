@@ -16,13 +16,8 @@ TESTUSER = {'name':'tom', 'email':'tom@example.com', 'password':'1234'}
 def home(req):
     info = {'req': req, 'page': 'report/home.html'}
     return connecttolrs.get_statements(display, info, verb="http://adlnet.gov/xapi/verbs/completed")
-    # return render(req, 'report/home.html', {"stmts":None, "msg":"this sucks"})
 
 def oauth_stmts(req, access_token=None):
-    #
-    #  START HERE::: trying to figure out how to make this work w/o report knowing about oauth
-    #   just added display and info to get_statements...  
-    #
     info = {'req': req, 'page': 'report/home.html'}
     try:
         user = User.objects.get(username__exact=TESTUSER['name'])
@@ -38,7 +33,6 @@ def oauth_stmts(req, access_token=None):
             token = connecttolrs.get_token(Tokens.objects.get(user=user))
         return connecttolrs.get_statements(display, info, consumer=consumer, token=token)
     except Tokens.DoesNotExist:
-        print 'token doesn\'t exist'
         return connecttolrs.request_token(oauth_stmts, info, consumer)
 
 def display(**kwargs):
