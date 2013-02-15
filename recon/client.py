@@ -101,7 +101,7 @@ class SimpleOAuthClient(oauth.OAuthClient):
         # via url
         # -> typically just some okay response
         # print "%s -- http method: %s\nurl: %s\n" % (__name__,oauth_request.http_method, oauth_request.to_url())
-        self.connection.request(oauth_request.http_method, oauth_request.to_url()) 
+        self.connection.request(oauth_request.http_method, oauth_request.to_url()[3:]) 
         response = self.connection.getresponse()
         if response.status != 200:
             # print "Fail: %s" % response.status
@@ -202,7 +202,7 @@ class SimpleOAuthClient(oauth.OAuthClient):
         # -> some protected resources
         headers = oauth_request.to_header()
         headers['X-Experience-API-Version']= '0.95'
-        self.connection.request('GET', oauth_request.get_normalized_http_url(), headers=headers)
+        self.connection.request('GET', oauth_request.get_normalized_http_url()[3:], headers=headers)
         response = self.connection.getresponse()
         if response.status == 200 or response.status == 204:
             return response.read()
