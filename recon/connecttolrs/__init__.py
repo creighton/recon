@@ -113,7 +113,9 @@ def token_callback(req):
 
     signature_method_plaintext = oauth.OAuthSignatureMethod_PLAINTEXT()
 
-    del _consumers[cid]
+    # removed this because of refresh issue when url in 
+    # browser is still the callback url
+    # del _consumers[cid]
 
     print 'verifier: %s' % verifier
     oauth_request = oauth.OAuthRequest.from_consumer_and_token(consumer, token=token, verifier=verifier, http_url=client.access_token_url)

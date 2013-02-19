@@ -29,8 +29,15 @@ def oauth_stmts(req, access_token=None):
     try:
         if access_token:
             token = access_token
+            rec, created = Tokens.objects.get_or_create(user=user)
+            rec.token_str = token.to_string()
+            rec.save()
         else:
-            token = connecttolrs.get_token(Tokens.objects.get(user=user))
+            tstr = Tokens.objects.get(user=user).token_str
+            if tstr:
+                token = connecttolrs.get_token(tstr)
+            else:
+                raise Tokens.DoesNotExist("token string was empty")
         return connecttolrs.get_statements(display, info, consumer=consumer, token=token)
     except Tokens.DoesNotExist:
         return connecttolrs.request_token(oauth_stmts, info, consumer)
