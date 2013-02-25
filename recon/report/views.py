@@ -7,8 +7,8 @@ import connecttolrs
 # Client Name: recon app 
 # Client Identifier: 1caabcc0f6154c1786f370f101d0d6f5 
 # Client Shared-Secret: 6FUAtfwRVw
-KEY = "7e29e09998644b32b4872e97a36f72ec"
-SECRET = "CS6GzuF23M"
+KEY = "21455fb3eec0483fa1ed0f9a521c1220"
+SECRET = "u5pFBTSdJh"
 
 # of course you wouldn't really do this
 TESTUSER = {'name':'tom', 'email':'tom@example.com', 'password':'1234'}

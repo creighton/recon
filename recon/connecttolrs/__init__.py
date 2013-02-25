@@ -14,8 +14,13 @@ def get_statements(displaycallback, info, actor=None,object=None,verb=None, cons
     url = "http://localhost:8000/XAPI/statements/"
     if consumer and token: #oauth time
         oauth_request = oauth.OAuthRequest.from_consumer_and_token(consumer, token=token, http_method='GET', http_url=url)
+        oauth_request.sign_request(oauth.OAuthSignatureMethod_HMAC_SHA1(), consumer, token)
         headers = oauth_request.to_header()
-        # oauth_request.sign_request(signature_method_hmac_sha1, consumer, token)
+        r = requests.get(oauth_request.get_normalized_http_url(), headers=headers)
+        print r.status_code
+        print r.content
+        info['d'] = {'stmts':r.content}
+        return displaycallback(**info)
         # return client.access_resource(oauth_request)
     else:
         auth = "Basic %s" % settings.LRS_BASIC_CREDS
@@ -121,7 +126,7 @@ def token_callback(req):
     oauth_request = oauth.OAuthRequest.from_consumer_and_token(consumer, token=token, verifier=verifier, http_url=client.access_token_url)
     oauth_request.sign_request(signature_method_plaintext, consumer, token)
     # finally get access token
-    token = client.fetch_request_token(oauth_request)
+    token = client.fetch_access_token(oauth_request)
     
     # will wanna do some sort of f(info['req']) call here
     return f(info['req'], token)
@@ -149,14 +154,15 @@ class SimpleOAuthClient(oauth.OAuthClient):
             f.write(response.content)
             f.close()
             print "text written to /home/user/Desktop/error.html"
+        print response.content
         return oauth.OAuthToken.from_string(response.content)
 
     def fetch_access_token(self, oauth_request):
         # via headers
         # -> OAuthToken
         # print "%s -- http method: %s\nurl: %s\nheaders: %s" % (__name__,oauth_request.http_method, self.access_token_url, oauth_request.to_header())
-        self.connection.request(oauth_request.http_method, self.access_token_url, headers=oauth_request.to_header()) 
-        response = self.connection.getresponse()
+        # self.connection.request(oauth_request.http_method, self.access_token_url, headers=oauth_request.to_header()) 
+        # response = self.connection.getresponse()
         # if response.status != 200:
         #     print "Fail: %s" % response.status
         #     import pprint
@@ -167,7 +173,9 @@ class SimpleOAuthClient(oauth.OAuthClient):
         #     f.write(response.read())
         #     f.close()
         #     print "text written to /home/user/Desktop/error.html"
-        return oauth.OAuthToken.from_string(response.read())
+        # return oauth.OAuthToken.from_string(response.read())
+        response = requests.get(oauth_request.to_url(), headers=oauth_request.to_header())
+        return oauth.OAuthToken.from_string(response.content)
 
     def authorize_token(self, oauth_request):
         print oauth_request.http_method

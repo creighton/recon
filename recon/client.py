@@ -32,6 +32,7 @@ tom c changed stuff to work with the ADL LRS
 import httplib
 import time
 import oauth.oauth as oauth
+import requests
 
 # settings for the local test consumer
 SERVER = '127.0.0.1'
@@ -39,18 +40,14 @@ PORT = 8000
 
 # fake urls for the test server (matches ones in server.py)
 REQUEST_TOKEN_URL = '/XAPI/OAuth/initiate'
-ACCESS_TOKEN_URL = '/XAPI/OAuth/token'
+ACCESS_TOKEN_URL = 'http://127.0.0.1:8000/XAPI/OAuth/token'
 AUTHORIZATION_URL = '/XAPI/OAuth/authorize'
 CALLBACK_URL = 'oob'
 RESOURCE_URL = 'http://127.0.0.1:8000/XAPI/'
 
 # key and secret granted by the service provider for this consumer application - same as the MockOAuthDataStore
-CONSUMER_KEY = '<get your own.. register an app on the adllrs>'
-CONSUMER_SECRET = '<get your own>'
-
-# user login info.. typically this would be entered by the user during oauth authorize
-USER_NAME = "<get your own... register a user on the adllrs>"
-USER_PWD = "<get your own>"
+CONSUMER_KEY = '51d048cbf9e7448b9b9a50379e062606'
+CONSUMER_SECRET = 'HWjbZjGt2w'
 
 # example client using httplib with headers
 class SimpleOAuthClient(oauth.OAuthClient):
@@ -73,10 +70,12 @@ class SimpleOAuthClient(oauth.OAuthClient):
         return oauth.OAuthToken.from_string(response.read())
 
     def fetch_access_token(self, oauth_request):
-        self.connection.request(oauth_request.http_method, self.access_token_url, headers=oauth_request.to_header()) 
-        response = self.connection.getresponse()
+        # self.connection.request(oauth_request.http_method, self.access_token_url, headers=oauth_request.to_header()) 
+        # response = self.connection.getresponse()
+        response = requests.get(oauth_request.to_url(), headers=oauth_request.to_header())
         
-        return oauth.OAuthToken.from_string(response.read())
+        # return oauth.OAuthToken.from_string(response.read())
+        return oauth.OAuthToken.from_string(response.content)
 
     def authorize_token(self, oauth_request):
         self.connection.request(oauth_request.http_method, oauth_request.to_url()[3:]) 
@@ -101,10 +100,11 @@ class SimpleOAuthClient(oauth.OAuthClient):
     def access_resource(self, oauth_request):
         headers = oauth_request.to_header()
         headers['X-Experience-API-Version']= '0.95'
-        self.connection.request('GET', oauth_request.get_normalized_http_url()[3:], headers=headers)
-        response = self.connection.getresponse()
-        if response.status == 200 or response.status == 204:
-            return response.read()
+        # self.connection.request('GET', oauth_request.get_normalized_http_url()[3:], headers=headers)
+        # response = self.connection.getresponse()
+        response = requests.get(oauth_request.get_normalized_http_url(), headers=headers)
+        if response.status_code == 200 or response.status_code == 204:
+            return response.content
         else:
             raise Exception("response didn't come back right\nresponse:%s -- %s" % (response.status, response.read()))
 
@@ -172,17 +172,17 @@ def run_example():
     print '* Access protected resources ...'
     pause()
     
-    oauth_request = oauth.OAuthRequest.from_consumer_and_token(consumer, token=token, http_method='GET', http_url="/XAPI/statements")
+    oauth_request = oauth.OAuthRequest.from_consumer_and_token(consumer, token=token, http_method='GET', http_url="http://127.0.0.1:8000/XAPI/statements")
     oauth_request.sign_request(signature_method_hmac_sha1, consumer, token)
     
     print 'REQUEST (via get)'
     print 'parameters: %s' % str(oauth_request.parameters)
     pause()
     
-    params = client.access_resource(oauth_request)
+    resource = client.access_resource(oauth_request)
     
     print 'GOT'
-    print 'non-oauth parameters: %s' % params
+    print 'resource:\n %s' % resource
     pause()
 
 def pause():
